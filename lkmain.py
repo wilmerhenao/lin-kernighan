@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 numLow = 1
 numHigh = 1000
-numCities = 10
+numCities = 5
 m = 3
 Dist=np.zeros((numCities,numCities))
 
@@ -57,37 +57,41 @@ Dist=genDistanceMat(x, y)
 #Generate initial tour
 optlist = list(range(0, numCities))
 improvement=1
-plotcities(optlist, [x,y])
+#plotcities(optlist, [x,y])
 
 while (improvement >0):    #Check for every pair of cities that are neighbors in the tour whether improvement can be found
     bestTourLength=calcTourLength(optlist)
-    tempTourLength=bestTourLength
     bestListSoFar=optlist
     improvement=-1
+    print(optlist)
     for i in range(0, len(optlist)):
         #print('----------------i',i)
         #Given a pair of cities, find the swap that attains minimum distance with respect to current tour
+
+        print('i',i)
         for j in range(1, len(optlist)-1):
             print('j',j)
             #Do a swap and see if tour length improves
             tempOptList=optlist[0:j]+optlist[:j-1:-1]
-            print(tempOptList)
             tempTourLength=calcTourLength(tempOptList)
-            print(bestTourLength)
-            print(tempTourLength)
+            print('OLj:', optlist)
+
             if(tempTourLength<bestTourLength):
                 improvement=bestTourLength-tempTourLength
+                print('IMPROVEMENT',improvement)
                 bestListSoFar=tempOptList
                 bestTourLength=tempTourLength
-                #print(improvement)
+        print(bestListSoFar)
+        print('OLi:', i, optlist)
         if(bestListSoFar!=optlist):
             optlist=bestListSoFar
+            print('SHORTER TOUR FOUND!')
             break
         optlist=[optlist[-1]]+optlist[0:-1]
-
+    print (improvement)
 #linkernighan(xys, optlist)
 
-plotcities(optlist, [x,y])
+#plotcities(optlist, [x,y])
 
 
 
