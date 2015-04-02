@@ -2,6 +2,7 @@ import numpy as np
 import scipy.spatial as ssp
 import numpy.random as nprnd
 import matplotlib.pyplot as plt
+from matplotlib import animation
 
 numLow = 1
 numHigh = 1000
@@ -30,7 +31,7 @@ def plotcities(opttour,xys):
     #Make it a cycle
     xy1.append(xy1[0])
     xy2.append(xy2[0])
-    plt.plot(xy1, xy2, linestyle = '-', marker ='o', color = 'b', markerfacecolor = 'red')
+    ims.append(plt.plot(xy1, xy2, linestyle = '-', marker ='o', color = 'b', markerfacecolor = 'red'))
     plt.ylabel('original path')
 
 
@@ -56,14 +57,15 @@ Dist = genDistanceMat(x, y)
 #Generate initial tour
 optlist = list(range(0, numCities))
 improvement=1
-plt.figure(1)
-plt.subplot(211)
-plotcities(optlist, [x,y])
+ims = []
+fig1 = plt.figure()
 
 while (improvement > 0):    #Check for every pair of cities that are neighbors in the tour whether improvement can be found
     bestTourLength = calcTourLength(optlist)
     bestListSoFar = optlist
     improvement = -1
+    
+    plotcities(optlist, [x,y])
     for i in range(0, len(optlist)):
         #Given a pair of cities, find the swap that attains minimum distance with respect to current tour
         for j in range(2, len(optlist)-1):
@@ -80,8 +82,8 @@ while (improvement > 0):    #Check for every pair of cities that are neighbors i
         optlist = [optlist[-1]] + optlist[0:-1]
     
 print('final optlist: ', optlist)
-plt.subplot(212)
 plotcities(optlist, [x,y])
+im_ani = animation.ArtistAnimation(fig1, ims, interval=300, repeat_delay=3000, blit=True)
 plt.show()
 
 
